@@ -4,3 +4,6 @@
 !.gitignore 
 !*.rs
 !*.md
+!/my_project
+!/my_project/src
+!/my_project/*.toml

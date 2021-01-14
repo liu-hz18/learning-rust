@@ -1,3 +1,4 @@
+// 定义若干属性attribute， #[attribute(value)] 
 #![allow(dead_code)]
 #![allow(unused_variables)]
 #![allow(unused_assignments)]

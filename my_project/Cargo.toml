@@ -1,0 +1,16 @@
+# 构建我们的项目，我们可以在项目目录中的任何位置（包括子目录！）执行 
+# > cargo build
+# 执行 cargo run 来构建和运行
+
+[package]
+name = "my_project" # 编译时输出的二进制可执行文件的名称。
+version = "0.1.0"
+authors = ["liuhz <1456437967@qq.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+clap = "2.33.3" # 来自 crates.io， 一个命令行参数的解析器， 在 main.rs 文件中写上 extern crate clap，就和平常一样
+rand = { git = "https://github.com/rust-lang-nursery/rand" } # 来自网上的仓库
+
