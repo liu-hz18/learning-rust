@@ -14,3 +14,5 @@ edition = "2018"
 clap = "2.33.3" # 来自 crates.io， 一个命令行参数的解析器， 在 main.rs 文件中写上 extern crate clap，就和平常一样
 rand = { git = "https://github.com/rust-lang-nursery/rand" } # 来自网上的仓库
 
+[dev-dependencies]
+pretty_assertions = "0.4.0" # 有时仅在测试中才需要一些依赖（比如基准测试相关的）

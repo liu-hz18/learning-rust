@@ -95,5 +95,15 @@ fn main() {
         x_cube + x_squ + x // 没有分号，是一个表达式（右值），作为返回值
     };
     println!("y = {}", y);
-
+    
+    // 不安全操作:
+    // 裸指针: rust依然有这种类型
+    // 原始指针（raw pointer，裸指针）* 和引用 &T 有类似的功能，但引用总是安全的，因为借用检查器保证了它指向一个有效的数据。
+    // 解引用一个裸指针只能通过 不安全 代码块执行。
+    let raw_p: *const u32 = &10;
+    //assert!(*raw_p == 10); // error: dereference of raw pointer
+    unsafe {
+        assert!(*raw_p == 10);
+    }
+    // 一些函数可以声明为不安全的（unsafe），这意味着在使用它时保证正确性不再是编译器 的责任，而是程序员的。
 }
