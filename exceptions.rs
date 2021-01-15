@@ -2,6 +2,10 @@
 #![allow(unused_variables)]
 #![allow(unused_assignments)]
 
+// Rust 语言没有 异常（Exception） 这个概念，而是 可恢复 （ Recoverable ） 错误。
+// Rust 语言遇到可恢复错误时会返回一个 Result<T, E> 的枚举。
+// 如果遇到不可恢复的错误，则会自动调用 panic() 宏。
+
 // 最简单的错误处理机制就是 panic
 // 它会打印一个错误消息，开始 回退（unwind）任务，且通常会退出程序。
 // 在回退栈 的同时，运行时将会释放该线程所拥有的所有资源，这是通过调用线程中所有对象的 析构函数完成的。
