@@ -4,6 +4,8 @@
 
 // 最简单的错误处理机制就是 panic
 // 它会打印一个错误消息，开始 回退（unwind）任务，且通常会退出程序。
+// 在回退栈 的同时，运行时将会释放该线程所拥有的所有资源，这是通过调用线程中所有对象的 析构函数完成的。
+// panic! 不会泄露内存
 fn give_princess_1(gift: &str) {
     if gift == "snake" {
         panic!("AAAAAAAAA!!!!");
@@ -38,8 +40,8 @@ fn give_princess_2(gift: Option<&str>) {
 
 // Result (枚举类型) 是 Option 类型的更丰富的版本，描述的是可能的错误而不是可能的不存在。
 // Result<T，E> 可以有两个结果的其中一个
-// 1. Ok<T>：找到 T 元素
-// 2. Err<E>：找到 E 元素，E 即表示错误的类型。
+// 1. Ok<T>：找到 T 元素， 表示操作成功，并包装操作返回的 value
+// 2. Err<E>：找到 E 元素，E 即表示错误的类型。表示操作失败，并包装 why，它（但愿）能够解释失败的原因。（why 拥有 E 类型）
 // 例如 parse() 方法。它并不是总能把字符串解析成指定的类型，所以 parse() 返回一个 Result 表示可能的失败。
 fn multiply_1(first_number_str: &str, second_number_str: &str) -> i32 {
     let first_number = first_number_str.parse::<i32>().unwrap();
@@ -52,6 +54,8 @@ fn multiply_1(first_number_str: &str, second_number_str: &str) -> i32 {
 // 2. 返回它，因为 Err 就意味着它已经不能被处理了。
 // ? 几乎就等于一个会返回 Err 而不是 panic 的 unwrap。
 // ? 要么 unwrap 要么 return Err(error)
+// 它等同于这样一个匹配 表达式：其中 Err(err) 分支展开成提前返回的 return Err(err)，而 Ok(ok) 分支展开成 ok 表达式。
+
 // 别名
 use std::num::ParseIntError;
 // 为带有错误类型 `ParseIntError` 的 `Result` 定义一个泛型别名。
@@ -83,6 +87,7 @@ fn main() {
 
     let bird = Some("robin");
     let nothing: Option<&str> = None;
+    let another_nothing = None::< Option<&str> >; // 另一种表示
 
     give_princess_2(bird);
     //give_princess_2(nothing); // thread 'main' panicked at 'called `Option::unwrap()` on a `None` value'
