@@ -41,6 +41,43 @@ fn type_of<T>(_: &T) -> &'static str {
     std::any::type_name::<T>()
 }
 
+// `$ cat path` 的简单实现
+fn cat(path: &Path) -> io::Result<String> {
+    let mut f = File::open(path)?;
+    let mut s = String::new();
+    match f.read_to_string(&mut s) {
+        Ok(_) => Ok(s),
+        Err(e) => Err(e),
+    }
+}
+
+// `$ echo s > path` 的简单实现
+fn echo(s: &str, path: &Path) -> io::Result<()> {
+    let mut f = File::create(path)?;
+    f.write_all(s.as_bytes())
+}
+
+// `$ touch path` 的简单实现（忽略已存在的文件）
+fn touch(path: &Path) -> io::Result<()> {
+    match OpenOptions::new().create(true).write(true).open(path) {
+        Ok(_) => Ok(()),
+        Err(e) => Err(e),
+    }
+}
+
+// `$ mkdir path` 简单实现
+fn mkdir(path: &Path) -> io::Result<()> {
+    match std::fs::create_dir_all(path) { // 支持递归创建目录
+        Ok(_)  => Ok(()),
+        Err(e) => Err(e),
+    }
+}
+
+// `$ ls -a`的简单实现
+// fn ls_all<T>(path: &Path) -> io::Result<T> {
+//     std::fs::read_dir(path)
+// }
+
 fn main() {
     // 从 `&'static str` 创建一个 `Path`
     let path = Path::new("."); // Debug Trait
@@ -48,7 +85,7 @@ fn main() {
     let new_path = path.join("a").join("b");
     println!("{}", display);
     println!("{:?}", new_path);
-    
+
     // 将路径转换成一个字符串切片
     // 注意 Path 在内部并不是用 UTF-8 字符串表示的，而是存储为若干字节（Vec<u8>）的 vector。
     // 因此，将 Path 转化成 &str 并非零开销的（free），且可能失败（因此它 返回一个 Option）。
@@ -57,11 +94,10 @@ fn main() {
         Some(s) => println!("new path is {}", s),
     }
 
-    // create 静态方法以只写模式（write-only mode）打开一个文件。若文件已经存在，则 旧内容将被销毁。否则，将创建一个新文件。
     let path = Path::new("./lorem_ipsum.txt");
     let display = path.display();
 
-
+    // create 静态方法以只写模式（write-only mode）打开一个文件。若文件已经存在，则 旧内容将被销毁。否则，将创建一个新文件。
     // 以只写模式打开文件，返回 `io::Result<File>`
     let mut file = match File::create(&path) {
         Err(why) => panic!("couldn't create {}: {}", display, why.to_string()),
@@ -114,6 +150,11 @@ fn main() {
         Ok(_)    => println!("successfully wrote to {}", display),
     };
 
-
+    let paths = std::fs::read_dir(&Path::new("./my_project")); // paths: io::Result<fs::ReadDir>
+    //println!("{}", type_of(&paths)); 
+    for path in paths.unwrap() { 
+        //println!("{}", type_of(&(path)));
+        println!("-- {:?}", path.unwrap().path()); // path: io::Result<DirEntry>
+    }
     // `file` 离开作用域，并且 `./lorem_ipsum.txt` 文件将被关闭。
 }
