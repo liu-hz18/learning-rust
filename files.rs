@@ -74,7 +74,7 @@ fn mkdir(path: &Path) -> io::Result<()> {
 }
 
 // `$ ls -a`的简单实现
-// fn ls_all<T>(path: &Path) -> io::Result<T> {
+// fn ls_all(path: &Path) -> io::Result<fs::ReadDir> {
 //     std::fs::read_dir(path)
 // }
 
@@ -154,7 +154,8 @@ fn main() {
     //println!("{}", type_of(&paths)); 
     for path in paths.unwrap() { 
         //println!("{}", type_of(&(path)));
-        println!("-- {:?}", path.unwrap().path()); // path: io::Result<DirEntry>
+        let path_buf = path.unwrap().path(); // path_buf: PathBuf, 是可增长的Path
+        println!("-- {:?}", path_buf); // path: io::Result<DirEntry>
     }
     // `file` 离开作用域，并且 `./lorem_ipsum.txt` 文件将被关闭。
 }
