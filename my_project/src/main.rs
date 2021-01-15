@@ -22,6 +22,9 @@ fn are_you_on_linux() {
     println!("You are *not* running linux!")
 }
 
+extern crate clap;
+use clap::{Arg, App};
+
 // 新项目的入口源文件
 fn main() {
     println!("Hello, world!");
@@ -31,5 +34,42 @@ fn main() {
         println!("Yes. It's definitely linux!");
     } else {
         println!("Yes. It's definitely *not* linux!");
+    }
+    // 生成帮助: cargo run -- -h
+    // 添加参数: cargo run -- -f in -n 5
+    let matches = App::new("My Test Program")
+                      .version("0.1.0")
+                      .author("Liuhz <xxx@qq.com>")
+                      .about("Learn how to parse arguments")
+                      .arg(
+                          Arg::with_name("file")
+                              .short("f")
+                              .long("file")
+                              .takes_value(true)
+                              .required(false)
+                              .help("A cool file")
+                      )
+                      .arg(
+                          Arg::with_name("num")
+                              .short("n")
+                              .long("number")
+                              .takes_value(true) // Specifies that the argument takes a value at run time
+                              .required(false)
+                              .help("Five less than your favarite number")
+                      )
+                      .get_matches();
+    
+    let a_file = matches.value_of("file").unwrap_or("input.txt");
+    println!("The file passed is: {}", a_file);
+    
+    let num_str = matches.value_of("num");
+    match num_str {
+        None => println!("No idea what your favorite number is."),
+        Some(s) => {
+            match s.parse::<i32>() {
+                Ok(n) => println!("Your favorite number must be {}.", n + 5),
+                Err(_) => println!("That's not a number! {}", s),
+            }
+        }
     }
 }
