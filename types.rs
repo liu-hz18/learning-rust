@@ -4,6 +4,11 @@
 // 不显示类型转换产生的溢出警告。
 #![allow(overflowing_literals)]
 
+// 返回变量类型
+fn type_of<T>(_: &T) -> &'static str {
+    std::any::type_name::<T>()
+}
+
 fn main() {
     // Rust 通过静态类型确保类型安全。变量绑定可以在声明时说明类型，
     // 不过在多数情况下， 编译器能够从上下文推导出变量的类型，从而大大减少了类型说明的工作。
